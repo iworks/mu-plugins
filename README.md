@@ -1,7 +1,5 @@
-mu-plugins
-==========
-
 iWorks WordPress MU Plugins
+==========
 
 * admin-color-status.php - add row colors on admin entries list, color depend on entry status
 * disable_xmlrpc_pingbac.php - disable XML-RPC pingbacks
