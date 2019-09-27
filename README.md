@@ -17,3 +17,4 @@ iWorks WordPress MU Plugins
 * iworks_meta_robots.php - add to HTML head section - do not allow index entries on stream pages
 * iworks_remove_self_ping.php - remove self pings
 * iworks_show_post_time.php - show post time
+* class-iworks-relative.php - change urls to relative
