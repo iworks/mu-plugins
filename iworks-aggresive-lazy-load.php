@@ -1,0 +1,345 @@
+<?php
+/*
+Plugin Name: iWorks Aggresive Lazy Load
+Plugin URI: http://iworks.pl/szybki-wordpress-obrazki-leniwe-ladowanie
+Description: Added ability to agresive lazy load to improve page UX and speed.
+Version: 1.0.1
+Author: Marcin Pietrzak
+Author URI: http://iworks.pl/
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ */
+
+class iworks_aggresive_lazy_load {
+
+	/**
+	 * Post meta name for tiny thumbnail
+	 *
+	 * @since 1.0.0
+	 */
+	private $meta_name_tiny_thumbnail = '_iworks_tiny';
+
+	/**
+	 * Post meta name for dominant color
+	 *
+	 * @since 1.0.0
+	 */
+	private $meta_name_dominant_color = '_iworks_color';
+
+	/**
+	 * Debug
+	 *
+	 * value for debug 'debug'
+	 */
+	private $replace_status = false;
+
+	public function __construct() {
+		add_action( 'init', array( $this, 'settings' ) );
+		/**
+		 * replace
+		 */
+		add_action( 'add_attachment', array( $this, 'add_dominant_color' ) );
+		add_action( 'edit_attachment', array( $this, 'add_dominant_color' ) );
+		add_action( 'wp_footer', array( $this, 'wp_footer' ) );
+		add_filter( 'post_thumbnail_html', array( $this, 'filter_post_thumbnail_html' ), PHP_INT_MAX, 5 );
+		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attachment_image_attributes' ), 10, 3 );
+		/**
+		 * own
+		 */
+		add_filter( 'iworks_aggresive_lazy_load_filter_value', array( $this, 'filter_content' ) );
+		add_filter( 'iworks_aggresive_lazy_load_get_dominant_color', array( $this, 'get_dominant_color' ), 10, 2 );
+		add_filter( 'iworks_aggresive_lazy_load_get_tiny_thumbnail', array( $this, 'get_tiny_thumbnail' ), 10, 2 );
+	}
+
+	public function settings() {
+		$this->replace_status = apply_filters( 'iworks_aggresive_lazy_load_replace_status', $this->replace_status );
+	}
+
+	public function filter_content( $content ) {
+		preg_match_all( '/<img[^>]+>/', $content, $matches );
+		if ( empty( $matches ) ) {
+			return $content;
+		}
+		if ( empty( $matches[0] ) ) {
+			return $content;
+		}
+		foreach ( $matches[0] as $image ) {
+			if ( ! preg_match( '/wp-image-(\d+)/', $image, $m ) ) {
+				continue;
+			}
+			$new = $this->filter_post_thumbnail_html( $image, 0, $m[1], 'full', '' );
+			if ( $image === $new ) {
+				continue;
+			}
+			$content = str_replace( $image, $new, $content );
+		}
+		return $content;
+	}
+
+	public function filter_attachment_image_attributes( $attr, $attachment, $size ) {
+		$dominant_color = $this->get_dominant_color( null, $attachment->ID );
+		if ( ! empty( $dominant_color ) ) {
+			if ( isset( $attr['style'] ) ) {
+				$attr['style'] .= ';';
+			} else {
+				$attr['style'] = '';
+			}
+			if ( is_a( $attachment, 'WP_Post' ) && ! preg_match( '/image\/svg/', $attachment->post_mime_type ) ) {
+				$attr['style'] .= sprintf(
+					'background-color:#%s;',
+					$dominant_color
+				);
+			}
+		}
+		$tiny = $this->get_tiny_thumbnail( null, $attachment->ID );
+		if ( ! empty( $tiny ) ) {
+			$attr['data-src'] = $attr['src'];
+			$attr['src']      = $tiny;
+		}
+		if ( 'debug' === $this->replace_status && isset( $attr['srcset'] ) ) {
+			unset( $attr['srcset'] );
+		}
+		return $attr;
+	}
+
+	public function get_tiny_thumbnail( $thumb, $post_thumbnail_id ) {
+		if ( empty( $post_thumbnail_id ) ) {
+			return $thumb;
+		}
+		return $this->get_data( $post_thumbnail_id );
+	}
+
+	public function get_dominant_color( $color, $post_thumbnail_id ) {
+		if ( empty( $post_thumbnail_id ) ) {
+			return $color;
+		}
+		$value = get_post_meta( $post_thumbnail_id, $this->meta_name_dominant_color, true );
+		if ( empty( $value ) ) {
+			$value = $this->add_dominant_color( $post_thumbnail_id );
+			if ( ! is_wp_error( $value ) ) {
+				return $value;
+			}
+			return $color;
+		}
+		return $value;
+	}
+
+	/**
+	 * Filters the post thumbnail HTML.
+	 *
+	 * @since 2.9.0
+	 *
+	 * @param string       $html              The post thumbnail HTML.
+	 * @param int          $post_id           The post ID.
+	 * @param int          $post_thumbnail_id The post thumbnail ID.
+	 * @param string|int[] $size              Requested image size. Can be any registered image size name, or
+	 *                                        an array of width and height values in pixels (in that order).
+	 * @param string       $attr              Query string of attributes.
+	 */
+	public function filter_post_thumbnail_html( $html, $post_ID, $post_thumbnail_id, $size, $attr ) {
+		if ( preg_match( '/ data-src=/', $html ) ) {
+			return $html;
+		}
+		/**
+		 * no defined width or height - no lazy load!
+		 */
+		if (
+			! preg_match( '/ width=/', $html )
+			|| ! preg_match( '/ height=/', $html )
+		) {
+			return $html;
+		}
+		/**
+		 * Browser-level image lazy-loading for the web
+		 */
+		if ( ! preg_match( '/ loading=/', $html ) ) {
+			$html = preg_replace( '/<img /', '<img loading="lazy" /', $html );
+		}
+		$tiny = $this->get_data( $post_thumbnail_id );
+		if ( ! empty( $tiny ) ) {
+			$html       = preg_replace(
+				'/ src="([^"]+)"/',
+				sprintf( ' src="%s" data-src="%s"', $tiny, '$1' ),
+				$html
+			);
+			$background = get_post_meta( $post_thumbnail_id, $this->meta_name_dominant_color, true );
+			if ( ! empty( $background ) ) {
+				if ( preg_match( ' /style=/', $html ) ) {
+					$html = preg_replace(
+						'/ style="/',
+						sprintf(
+							' style="background-color:#%s;',
+							$background
+						),
+						$html
+					);
+				} else {
+					$html = preg_replace(
+						'/<img /',
+						sprintf(
+							'<img style="background-color:#%s" ',
+							$background
+						),
+						$html
+					);
+				}
+			}
+		}
+		if ( 'debug' === $this->replace_status ) {
+			$html = preg_replace( '/(data\-src|srcset)="[^"]+"/', '', $html );
+		}
+		return $html;
+	}
+
+	/**
+	 * Calculates the dominant color of an attachment and saves it as post meta.
+	 *
+	 * @since   0.1.0
+	 *
+	 * @param $post_id
+	 * @return string|WP_Error
+	 */
+	public function add_dominant_color( $post_id ) {
+		$post_type = get_post_mime_type( $post_id );
+		if ( ! preg_match( '/image\/(gif|jpeg|png)/', $post_type ) ) {
+			return;
+		}
+		if ( ! class_exists( 'Imagick', false ) ) {
+			return;
+		}
+		$path = get_attached_file( $post_id );
+		try {
+			$tiny   = $this->calculate( $path );
+			$result = update_post_meta( $post_id, $this->meta_name_tiny_thumbnail, $tiny );
+			if ( false === $result ) {
+				add_post_meta( $post_id, $this->meta_name_tiny_thumbnail, $tiny, true );
+			}
+		} catch ( Exception $e ) {
+			return new WP_Error( 'invalid_image', $e->getMessage(), $path );
+		}
+		try {
+			$dominant_color = $this->calculate_dominant_color( $path );
+			$result         = update_post_meta( $post_id, $this->meta_name_dominant_color, $dominant_color );
+			if ( false === $result ) {
+				add_post_meta( $post_id, $this->meta_name_dominant_color, $dominant_color, true );
+			}
+			return $dominant_color;
+		} catch ( Exception $e ) {
+			return new WP_Error( 'invalid_image', $e->getMessage(), $path );
+		}
+	}
+
+	/**
+	 * Calculates the dominant color of an image.
+	 *
+	 * @since   0.5.2
+	 *
+	 * @param $path
+	 *
+	 * @return string
+	 */
+	private function calculate_dominant_color( $path ) {
+		$image = new Imagick( $path );
+		$image->resizeImage( 256, 256, Imagick::FILTER_QUADRATIC, 1 );
+		$image->quantizeImage( 1, Imagick::COLORSPACE_RGB, 0, false, false );
+		$image->setFormat( 'RGB' );
+		return substr( bin2hex( $image ), 0, 6 );
+	}
+
+	/**
+	 * Calculates tiny thumbnails of an image in three different sizes.
+	 *
+	 * @since   0.6.0
+	 *
+	 * @param $path
+	 *
+	 * @return array
+	 */
+	private function calculate( $path ) {
+		$image = new Imagick( $path );
+		$image->stripImage();
+		$image->resizeImage( 6, 0, Imagick::FILTER_QUADRATIC, 1 );
+		$image->setFormat( 'GIF' );
+		return base64_encode( $image );
+	}
+
+	/**
+	 * Get very small thumbnail
+	 *
+	 * @since 1.0.0
+	 */
+	private function get_data( $post_thumbnail_id, $format = 'encode' ) {
+		$thumb = get_post_meta( $post_thumbnail_id, $this->meta_name_tiny_thumbnail, true );
+		if ( ! empty( $thumb ) ) {
+			if ( 'encode' === $format ) {
+				return sprintf(
+					'data:image/gif;base64,%s',
+					$thumb
+				);
+			}
+			return $thumb;
+		}
+		$this->add_dominant_color( $post_thumbnail_id );
+		$thumb = get_post_meta( $post_thumbnail_id, $this->meta_name_tiny_thumbnail, true );
+		if ( empty( $thumb ) ) {
+			return $thumb;
+		}
+		if ( 'encode' === $format ) {
+			return sprintf(
+				'data:image/gif;base64,%s',
+				$thumb
+			);
+		}
+		return $thumb;
+	}
+
+	public function wp_footer() {
+		if ( 'debug' === $this->replace_status ) {
+			return;
+		}
+		?>
+<script>
+function iwork_image_replacement( event ) {
+	var wh = window.innerHeight * 1.1 + window.scrollY;
+	var wm = window.scrollY * .9;
+	document.querySelectorAll('[data-src]').forEach( function( el ) {
+		if (
+			! el
+			|| ! el.offsetParent
+			|| 'undefined' === typeof el.offsetParent
+			|| 'undefined' === typeof el.offsetParent.offsetTop
+		) {
+			return;
+		}
+		if ( wh < el.offsetParent.offsetTop ) {
+			return true;
+		}
+		if ( wm > el.offsetParent.offsetTop + el.offsetHeight ) {
+			return true;
+		}
+		if ( 'img' === el.tagName.toLowerCase() ) {
+			el.setAttribute( 'src', el.dataset.src );
+		} else {
+			el.style.backgroundImage = 'url(' + el.dataset.src + ')';
+		}
+		el.removeAttribute('data-src');
+	});
+	document.querySelectorAll('[data-srcset]').forEach( function( el ) {
+		if ( wh < el.offsetParent.offsetTop ) {
+			return true;
+		}
+		if ( wm > el.offsetParent.offsetTop + el.offsetHeight ) {
+			return true;
+		}
+		el.setAttribute( 'srcset', el.dataset.srcset );
+		el.removeAttribute('data-srcset');
+	})
+}
+window.addEventListener('load', (event) => { iwork_image_replacement(); });
+window.addEventListener('scroll', (event) => { iwork_image_replacement(); } );
+window.addEventListener('resize', (event) => { iwork_image_replacement(); } );
+</script>
+		<?php
+	}
+}
+new iworks_aggresive_lazy_load;
