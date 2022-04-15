@@ -3,7 +3,7 @@
 Plugin Name: iWorks Aggresive Lazy Load
 Plugin URI: http://iworks.pl/szybki-wordpress-obrazki-leniwe-ladowanie
 Description: Added ability to agresive lazy load to improve page UX and speed.
-Version: 1.0.1
+Version: 1.0.2
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -30,6 +30,8 @@ class iworks_aggresive_lazy_load {
 	 * Debug
 	 *
 	 * value for debug 'debug'
+	 *
+	 * @since 1.0.0
 	 */
 	private $replace_status = false;
 
@@ -51,10 +53,26 @@ class iworks_aggresive_lazy_load {
 		add_filter( 'iworks_aggresive_lazy_load_get_tiny_thumbnail', array( $this, 'get_tiny_thumbnail' ), 10, 2 );
 	}
 
+	/**
+	 * Settings function, allow to set 'debug' for 'replace_status'.
+	 *
+	 * @since 1.0.1
+	 */
 	public function settings() {
 		$this->replace_status = apply_filters( 'iworks_aggresive_lazy_load_replace_status', $this->replace_status );
 	}
 
+	/**
+	 * Filter content
+	 *
+	 * Filter content to modify img tags with lazyload data.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $content Post content.
+	 *
+	 * @return string
+	 */
 	public function filter_content( $content ) {
 		preg_match_all( '/<img[^>]+>/', $content, $matches );
 		if ( empty( $matches ) ) {
@@ -76,6 +94,13 @@ class iworks_aggresive_lazy_load {
 		return $content;
 	}
 
+	/**
+	 * Filter attachemnt attributes.
+	 *
+	 * Filter attachemnt attributes to add lazy load element and replace src attribute.
+	 *
+	 * @since 1.0.0
+	 */
 	public function filter_attachment_image_attributes( $attr, $attachment, $size ) {
 		$dominant_color = $this->get_dominant_color( null, $attachment->ID );
 		if ( ! empty( $dominant_color ) ) {
@@ -84,7 +109,11 @@ class iworks_aggresive_lazy_load {
 			} else {
 				$attr['style'] = '';
 			}
-			if ( is_a( $attachment, 'WP_Post' ) && ! preg_match( '/image\/svg/', $attachment->post_mime_type ) ) {
+			if (
+				is_a( $attachment, 'WP_Post' )
+				&& ! preg_match( '/image\/svg/', $attachment->post_mime_type )
+				&& 'transparent' !== $dominant_color
+			) {
 				$attr['style'] .= sprintf(
 					'background-color:#%s;',
 					$dominant_color
@@ -102,6 +131,13 @@ class iworks_aggresive_lazy_load {
 		return $attr;
 	}
 
+	/**
+	 * Get tiny thumbnail.
+	 *
+	 * Get tiny 6x0 pixels thumbnail to show it from html as encoded image.
+	 *
+	 * @since 1.0.0
+	 */
 	public function get_tiny_thumbnail( $thumb, $post_thumbnail_id ) {
 		if ( empty( $post_thumbnail_id ) ) {
 			return $thumb;
@@ -109,6 +145,13 @@ class iworks_aggresive_lazy_load {
 		return $this->get_data( $post_thumbnail_id );
 	}
 
+	/**
+	 * Get dominant color.
+	 *
+	 * Get and save image dominant color to set background color.
+	 *
+	 * @since 1.0.0
+	 */
 	public function get_dominant_color( $color, $post_thumbnail_id ) {
 		if ( empty( $post_thumbnail_id ) ) {
 			return $color;
@@ -127,7 +170,7 @@ class iworks_aggresive_lazy_load {
 	/**
 	 * Filters the post thumbnail HTML.
 	 *
-	 * @since 2.9.0
+	 * @since 1.0.0
 	 *
 	 * @param string       $html              The post thumbnail HTML.
 	 * @param int          $post_id           The post ID.
@@ -194,9 +237,9 @@ class iworks_aggresive_lazy_load {
 	/**
 	 * Calculates the dominant color of an attachment and saves it as post meta.
 	 *
-	 * @since   0.1.0
+	 * @since 1.0.0
 	 *
-	 * @param $post_id
+	 * @param integer $post_id
 	 * @return string|WP_Error
 	 */
 	public function add_dominant_color( $post_id ) {
@@ -232,14 +275,18 @@ class iworks_aggresive_lazy_load {
 	/**
 	 * Calculates the dominant color of an image.
 	 *
-	 * @since   0.5.2
+	 * @since 1.0.0
 	 *
-	 * @param $path
+	 * @param string $path
 	 *
 	 * @return string
 	 */
 	private function calculate_dominant_color( $path ) {
-		$image = new Imagick( $path );
+		$image            = new Imagick( $path );
+		$has_transparency = $image->getImageAlphaChannel();
+		if ( $has_transparency ) {
+			return 'transparent';
+		}
 		$image->resizeImage( 256, 256, Imagick::FILTER_QUADRATIC, 1 );
 		$image->quantizeImage( 1, Imagick::COLORSPACE_RGB, 0, false, false );
 		$image->setFormat( 'RGB' );
@@ -249,9 +296,9 @@ class iworks_aggresive_lazy_load {
 	/**
 	 * Calculates tiny thumbnails of an image in three different sizes.
 	 *
-	 * @since   0.6.0
+	 * @since 1.0.0
 	 *
-	 * @param $path
+	 * @param string $path
 	 *
 	 * @return array
 	 */
@@ -293,6 +340,13 @@ class iworks_aggresive_lazy_load {
 		return $thumb;
 	}
 
+	/**
+	 * Add JavaScript to footer.
+	 *
+	 * Action to add JavaScript with lazy load replacements to footer.
+	 *
+	 * @since 1.0.0
+	 */
 	public function wp_footer() {
 		if ( 'debug' === $this->replace_status ) {
 			return;
