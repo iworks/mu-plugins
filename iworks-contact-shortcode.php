@@ -20,7 +20,7 @@ class iWorks_contact_shortcode {
 		$data = array(
 			'Facebook' => 'https://www.facebook.com/pietrzak.marcin',
 			'LinkedIn' => 'http://pl.linkedin.com/in/pietrzakmarcin',
-			'E-mail'   => antispambot( 'marcin@iworks.pl' ),
+			'E-mail'   => 'mailto:' . antispambot( 'marcin@iworks.pl' ),
 		);
 
 		$content  = sprintf( '<h2>%s</h2>', __( 'Contact', 'iworks' ) );
@@ -29,6 +29,7 @@ class iWorks_contact_shortcode {
 			$content .= sprintf( '<li><a href="%s">%s</li>', $href, $label );
 		}
 		$content .= '</ul>';
+		return $content;
 	}
 
 }
