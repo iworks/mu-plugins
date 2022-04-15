@@ -10,31 +10,28 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-class iworks_turn_off_comments_for_atttachments
-{
-    public function __construct()
-    {
-        add_action( 'comments_open', array( $this, 'comments_open' ), PHP_INT_MAX, 2 );
-    }
-    public static function init()
-    {
-        new iworks_turn_off_comments_for_atttachments();
-    }
+class iworks_turn_off_comments_for_atttachments {
 
-    public function comments_open($open, $post_id)
-    {
-        $post = get_post( $post_id );
+	public function __construct() {
+		add_action( 'comments_open', array( $this, 'comments_open' ), PHP_INT_MAX, 2 );
+	}
+	public static function init() {
+		new iworks_turn_off_comments_for_atttachments();
+	}
 
-        if (
-            is_object($post)
-            && isset($post->post_type)
-            && 'attachment' == $post->post_type
-        ) {
-            $open = false;
-        }
+	public function comments_open( $open, $post_id ) {
+		$post = get_post( $post_id );
 
-        return $open;
-    }
+		if (
+			is_object( $post )
+			&& isset( $post->post_type )
+			&& 'attachment' == $post->post_type
+		) {
+			$open = false;
+		}
+
+		return $open;
+	}
 
 }
 

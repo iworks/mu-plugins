@@ -36,7 +36,7 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 		}
 		public function save_post( $post_id, $post, $update ) {
 			$post_type = get_post_type( $post_id );
-			$support = post_type_supports( $post_type, 'thumbnail' );
+			$support   = post_type_supports( $post_type, 'thumbnail' );
 			if ( ! $support ) {
 				return;
 			}
@@ -52,11 +52,11 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 			$movie_id = false;
 			if ( preg_match( '#https?://youtu.be/([0-9a-z\-]+)#i', $post->post_content, $matches ) ) {
 				$movie_id = $matches[1];
-			} else if ( preg_match( '#https?://((m|www)\.)?youtube\.com/watch(\?v=|/)([0-9a-z\-]+)#i', $post->post_content, $matches )  ) {
+			} elseif ( preg_match( '#https?://((m|www)\.)?youtube\.com/watch(\?v=|/)([0-9a-z\-]+)#i', $post->post_content, $matches ) ) {
 				$movie_id = $matches[4];
 			}
 			if ( $movie_id ) {
-				$url = sprintf( 'http://i%d.ytimg.com/vi/%s/maxresdefault.jpg', rand( 1,4 ), $movie_id );
+				$url = sprintf( 'http://i%d.ytimg.com/vi/%s/maxresdefault.jpg', rand( 1, 4 ), $movie_id );
 				set_post_format( $post, 'video' );
 				$thumbnail_id = $this->save_external_file( $post, $url, $movie_id );
 				if ( ! empty( $thumbnail_id ) ) {
@@ -65,13 +65,13 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 			}
 		}
 		private function get_existing_attachment_id( $url ) {
-			$args = array(
-				'post_type' => 'attachment',
-				'post_status' => 'any',
-				'meta_key' => $this->meta_key_name,
-				'meta_value' => $url,
+			$args      = array(
+				'post_type'      => 'attachment',
+				'post_status'    => 'any',
+				'meta_key'       => $this->meta_key_name,
+				'meta_value'     => $url,
 				'posts_per_page' => 1,
-				'fields' => 'ids',
+				'fields'         => 'ids',
 			);
 			$the_query = new WP_Query( $args );
 			if ( $the_query->have_posts() ) {
@@ -87,17 +87,17 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 			curl_setopt_array(
 				$curl,
 				array(
-					CURLOPT_HEADER => true,
-					CURLOPT_NOBODY => true,
+					CURLOPT_HEADER         => true,
+					CURLOPT_NOBODY         => true,
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_SSL_VERIFYPEER => false,
-					CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13',
-					CURLOPT_URL => $link,
+					CURLOPT_USERAGENT      => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13',
+					CURLOPT_URL            => $link,
 				)
 			);
 			$file_headers = explode( "\n", curl_exec( $curl ) );
-			$size = curl_getinfo( $curl , CURLINFO_CONTENT_LENGTH_DOWNLOAD );
-			$mime = curl_getinfo( $curl, CURLINFO_CONTENT_TYPE );
+			$size         = curl_getinfo( $curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD );
+			$mime         = curl_getinfo( $curl, CURLINFO_CONTENT_TYPE );
 			curl_close( $curl );
 			$file_headers['size'] = absint( $size );
 			$file_headers['mime'] = trim( $mime );
@@ -109,8 +109,8 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 		public function checkValidLink( $link ) {
 			$file_headers = $this->check_headers( $link );
 			$headerStatus = trim( preg_replace( '/\s\s+/', ' ', $file_headers[0] ) );
-			$allow_files = array( 'HTTP/1.1 200 OK' , 'HTTP/1.0 200 OK' );
-			if ( in_array( $headerStatus , $allow_files ) && ! empty( $file_headers ) && $file_headers['size'] > 0 ) {
+			$allow_files  = array( 'HTTP/1.1 200 OK', 'HTTP/1.0 200 OK' );
+			if ( in_array( $headerStatus, $allow_files ) && ! empty( $file_headers ) && $file_headers['size'] > 0 ) {
 				return $file_headers;
 			}
 			return false;
@@ -119,7 +119,7 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 		 * Download external files and upload to our server.
 		 */
 		public function save_external_file( $post, $url, $name ) {
-			if ( isset( $check ) and ($check === true) ) {
+			if ( isset( $check ) and ( $check === true ) ) {
 				$existing = $this->get_existing_attachment_id( $url );
 			}
 			if ( isset( $existing ) and is_numeric( $existing ) ) {
@@ -141,7 +141,7 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 			}
 			$file_array = array(
 				'tmp_name' => $tmp,
-				'name' => $name.'.jpg',
+				'name'     => $name . '.jpg',
 			);
 			// do the validation and storage stuff
 			$thumbnail_id = media_handle_sideload( $file_array, $post->ID, $post->post_title );
@@ -149,8 +149,8 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 				return false;
 			}
 			// create the thumbnails
-			$attach_data = wp_generate_attachment_metadata( $thumbnail_id,  get_attached_file( $thumbnail_id ) );
-			wp_update_attachment_metadata( $thumbnail_id,  $attach_data );
+			$attach_data = wp_generate_attachment_metadata( $thumbnail_id, get_attached_file( $thumbnail_id ) );
+			wp_update_attachment_metadata( $thumbnail_id, $attach_data );
 			//save the original url as post meta
 			add_post_meta( $thumbnail_id, $this->meta_key_name, $url, true );
 			return $thumbnail_id;

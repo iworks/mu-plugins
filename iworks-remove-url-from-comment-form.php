@@ -34,5 +34,5 @@ function iworks_remove_url_from_comment_form( $fields ) {
 	}
 	return $fields;
 }
-add_filter( 'comment_form_default_fields','iworks_remove_url_from_comment_form' );
+add_filter( 'comment_form_default_fields', 'iworks_remove_url_from_comment_form' );
 

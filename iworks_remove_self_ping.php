@@ -11,15 +11,14 @@ License: GNU GPL
 
 add_action( 'pre_ping', 'iworks_action_pre_ping_remove_selfpings' );
 
-if ( !function_exists( 'iworks_action_pre_ping_remove_selfpings' ) ) {
-    function iworks_action_pre_ping_remove_selfpings( &$links )
-    {
-        $home = home_url();
-        foreach ( $links as $l => $link ) {
-            if ( 0 === strpos( $link, $home ) ) {
-                unset( $links[$l] );
-            }
-        }
-    }
+if ( ! function_exists( 'iworks_action_pre_ping_remove_selfpings' ) ) {
+	function iworks_action_pre_ping_remove_selfpings( &$links ) {
+		$home = home_url();
+		foreach ( $links as $l => $link ) {
+			if ( 0 === strpos( $link, $home ) ) {
+				unset( $links[ $l ] );
+			}
+		}
+	}
 }
 
