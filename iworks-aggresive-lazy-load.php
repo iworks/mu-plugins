@@ -3,7 +3,7 @@
 Plugin Name: iWorks Aggresive Lazy Load
 Plugin URI: http://iworks.pl/szybki-wordpress-obrazki-leniwe-ladowanie
 Description: Added ability to agresive lazy load to improve page UX and speed.
-Version: 1.0.2
+Version: 1.0.3
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -36,6 +36,19 @@ class iworks_aggresive_lazy_load {
 	private $replace_status = false;
 
 	public function __construct() {
+		/**
+		 * Turn off in admin.
+		 *
+		 * Props for Patryk Siuta
+		 *
+		 * @since 1.0.3
+		 */
+		if ( is_admin() ) {
+			return;
+		}
+		/**
+		 * settings
+		 */
 		add_action( 'init', array( $this, 'settings' ) );
 		/**
 		 * replace
@@ -74,6 +87,14 @@ class iworks_aggresive_lazy_load {
 	 * @return string
 	 */
 	public function filter_content( $content ) {
+		/**
+		 * turn off replacement
+		 *
+		 * @since 1.0.3
+		 */
+		if ( apply_filters( 'iworks_aggresive_lazy_load_filter_content', false ) ) {
+			return $content;
+		}
 		preg_match_all( '/<img[^>]+>/', $content, $matches );
 		if ( empty( $matches ) ) {
 			return $content;
@@ -160,11 +181,21 @@ class iworks_aggresive_lazy_load {
 		if ( empty( $value ) ) {
 			$value = $this->add_dominant_color( $post_thumbnail_id );
 			if ( ! is_wp_error( $value ) ) {
-				return $value;
+				/**
+				 * allow to change dominant color
+				 *
+				 * @since 1.0.3
+				 */
+				return apply_filters( 'iworks_aggresive_lazy_load_dominant_color', $value );
 			}
 			return $color;
 		}
-		return $value;
+		/**
+		 * allow to change dominant color
+		 *
+		 * @since 1.0.3
+		 */
+		return apply_filters( 'iworks_aggresive_lazy_load_dominant_color', $value );
 	}
 
 	/**
