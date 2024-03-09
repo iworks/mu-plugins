@@ -3,7 +3,7 @@
 Plugin Name: iWorks Aggresive Lazy Load
 Plugin URI: http://iworks.pl/szybki-wordpress-obrazki-leniwe-ladowanie
 Description: Added ability to agresive lazy load to improve page UX and speed.
-Version: 1.0.3
+Version: 1.0.4
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -64,6 +64,22 @@ class iworks_aggresive_lazy_load {
 		add_filter( 'iworks_aggresive_lazy_load_filter_value', array( $this, 'filter_content' ) );
 		add_filter( 'iworks_aggresive_lazy_load_get_dominant_color', array( $this, 'get_dominant_color' ), 10, 2 );
 		add_filter( 'iworks_aggresive_lazy_load_get_tiny_thumbnail', array( $this, 'get_tiny_thumbnail' ), 10, 2 );
+		/**
+		 * WooCommerce
+		 *
+		 * @since 1.0.4
+		 */
+		add_action( 'woocommerce_email_header', array( $this, 'remove_replacements' ) );
+	}
+
+	/**
+	 * remove replacements hooks
+	 *
+	 * @since 1.0.4
+	 */
+	function remove_replacements() {
+		remove_filter( 'post_thumbnail_html', array( $this, 'filter_post_thumbnail_html' ), PHP_INT_MAX, 5 );
+		remove_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attachment_image_attributes' ), 10, 3 );
 	}
 
 	/**
@@ -427,4 +443,12 @@ window.addEventListener('resize', (event) => { iwork_image_replacement(); } );
 		<?php
 	}
 }
+
 new iworks_aggresive_lazy_load;
+
+/**
+ * changelog
+ *
+ * 1.0.4 (2024-03-09)
+ * - tuen off replacements when woo starts to email
+ */
