@@ -8,7 +8,14 @@ Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
- */
+
+
+= CHANGELOG =
+
+== 1.0.4 (2024-10-19) ==
+* The loading attribute has been added to the img html tag.
+
+*/
 
 class iworks_aggresive_lazy_load {
 
@@ -59,27 +66,17 @@ class iworks_aggresive_lazy_load {
 		add_filter( 'post_thumbnail_html', array( $this, 'filter_post_thumbnail_html' ), PHP_INT_MAX, 5 );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attachment_image_attributes' ), 10, 3 );
 		/**
+		 * add loading="lazy"
+		 *
+		 * @since 1.0.4
+		 */
+		add_filter( 'the_content', array( $this, 'filter_the_content_add_attribute_loading_lazy_to_img_tag' ) );
+		/**
 		 * own
 		 */
 		add_filter( 'iworks_aggresive_lazy_load_filter_value', array( $this, 'filter_content' ) );
 		add_filter( 'iworks_aggresive_lazy_load_get_dominant_color', array( $this, 'get_dominant_color' ), 10, 2 );
 		add_filter( 'iworks_aggresive_lazy_load_get_tiny_thumbnail', array( $this, 'get_tiny_thumbnail' ), 10, 2 );
-		/**
-		 * WooCommerce
-		 *
-		 * @since 1.0.4
-		 */
-		add_action( 'woocommerce_email_header', array( $this, 'remove_replacements' ) );
-	}
-
-	/**
-	 * remove replacements hooks
-	 *
-	 * @since 1.0.4
-	 */
-	function remove_replacements() {
-		remove_filter( 'post_thumbnail_html', array( $this, 'filter_post_thumbnail_html' ), PHP_INT_MAX, 5 );
-		remove_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attachment_image_attributes' ), 10, 3 );
 	}
 
 	/**
@@ -388,6 +385,25 @@ class iworks_aggresive_lazy_load {
 	}
 
 	/**
+	 * add loading="lazy"
+	 *
+	 * @since 1.0.4
+	 */
+	public function filter_the_content_add_attribute_loading_lazy_to_img_tag( $content ) {
+		if ( ! preg_match_all( '/<img[^>]+/', $content, $matches ) ) {
+			return $content;
+		}
+		foreach ( $matches[0] as $source ) {
+			if ( ! preg_match( '/loading/', $source ) ) {
+				$pattern     = sprintf( '~%s~', $source );
+				$replacement = preg_replace( '/<img/', '<img loading="lazy"', $source );
+				$content     = preg_replace( $pattern, $replacement, $content );
+			}
+		}
+		return $content;
+	}
+
+	/**
 	 * Add JavaScript to footer.
 	 *
 	 * Action to add JavaScript with lazy load replacements to footer.
@@ -443,12 +459,4 @@ window.addEventListener('resize', (event) => { iwork_image_replacement(); } );
 		<?php
 	}
 }
-
 new iworks_aggresive_lazy_load;
-
-/**
- * changelog
- *
- * 1.0.4 (2024-03-09)
- * - tuen off replacements when woo starts to email
- */
