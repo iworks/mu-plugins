@@ -3,12 +3,19 @@
 Plugin Name: iWorks Aggresive Lazy Load
 Plugin URI: http://iworks.pl/szybki-wordpress-obrazki-leniwe-ladowanie
 Description: Added ability to agresive lazy load to improve page UX and speed.
-Version: 1.0.3
+Version: 1.0.4
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
- */
+
+
+= CHANGELOG =
+
+== 1.0.4 (2024-10-19) ==
+* The loading attribute has been added to the img html tag.
+
+*/
 
 class iworks_aggresive_lazy_load {
 
@@ -58,6 +65,12 @@ class iworks_aggresive_lazy_load {
 		add_action( 'wp_footer', array( $this, 'wp_footer' ) );
 		add_filter( 'post_thumbnail_html', array( $this, 'filter_post_thumbnail_html' ), PHP_INT_MAX, 5 );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attachment_image_attributes' ), 10, 3 );
+		/**
+		 * add loading="lazy"
+		 *
+		 * @since 1.0.4
+		 */
+		add_filter( 'the_content', array( $this, 'filter_the_content_add_attribute_loading_lazy_to_img_tag' ) );
 		/**
 		 * own
 		 */
@@ -369,6 +382,25 @@ class iworks_aggresive_lazy_load {
 			);
 		}
 		return $thumb;
+	}
+
+	/**
+	 * add loading="lazy"
+	 *
+	 * @since 1.0.4
+	 */
+	public function filter_the_content_add_attribute_loading_lazy_to_img_tag( $content ) {
+		if ( ! preg_match_all( '/<img[^>]+/', $content, $matches ) ) {
+			return $content;
+		}
+		foreach ( $matches[0] as $source ) {
+			if ( ! preg_match( '/loading/', $source ) ) {
+				$pattern     = sprintf( '~%s~', $source );
+				$replacement = preg_replace( '/<img/', '<img loading="lazy"', $source );
+				$content     = preg_replace( $pattern, $replacement, $content );
+			}
+		}
+		return $content;
 	}
 
 	/**
