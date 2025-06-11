@@ -77,6 +77,18 @@ class iworks_aggresive_lazy_load {
 		add_filter( 'iworks_aggresive_lazy_load_filter_value', array( $this, 'filter_content' ) );
 		add_filter( 'iworks_aggresive_lazy_load_get_dominant_color', array( $this, 'get_dominant_color' ), 10, 2 );
 		add_filter( 'iworks_aggresive_lazy_load_get_tiny_thumbnail', array( $this, 'get_tiny_thumbnail' ), 10, 2 );
+		/**
+		 * WooCommerce
+		 */
+		add_action( 'woocommerce_email_header', array( $this, 'remove_replacements' ) );
+	}
+
+	/**
+	 * remove replacements hooks
+	 */
+	function remove_replacements() {
+		remove_filter( 'post_thumbnail_html', array( $this, 'filter_post_thumbnail_html' ), PHP_INT_MAX, 5 );
+		remove_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attachment_image_attributes' ), 10, 3 );
 	}
 
 	/**
@@ -459,4 +471,4 @@ window.addEventListener('resize', (event) => { iwork_image_replacement(); } );
 		<?php
 	}
 }
-new iworks_aggresive_lazy_load;
+new iworks_aggresive_lazy_load();
