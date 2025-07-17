@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Block all robots robots.txt
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Try to block all requests in <a href="/robots.txt">robots.txt</a>
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
  */
 
 add_filter( 'robots_txt', 'iworks_filter_block_robots_txt' );
@@ -48,4 +48,3 @@ if ( ! function_exists( 'iworks_filter_block_robots_txt' ) ) {
 		return $robots;
 	}
 }
-

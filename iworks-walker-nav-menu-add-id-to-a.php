@@ -2,13 +2,13 @@
 
 /*
 Plugin Name: iWorks Add ID to "A"
-Plugin URI:
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Added ability to add ID attribute to menu item.
 Version: 1.0.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
 
@@ -67,5 +67,5 @@ class iworks_add_wp_nav_menu_item_a_tag {
 	}
 }
 
-new iworks_add_wp_nav_menu_item_a_tag;
+new iworks_add_wp_nav_menu_item_a_tag();
 

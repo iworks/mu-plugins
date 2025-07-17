@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Allow load SVG
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Add svg files to allowed.
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
  */
 
 
@@ -18,4 +18,3 @@ function iworks_custom_upload_mimes_allow_svg( $t, $user ) {
 	}
 	return $t;
 }
-

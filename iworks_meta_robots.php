@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Add meta robots
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Add meta robots: noindex for selected pages
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
  */
 
 add_action( 'wp_head', 'iworks_action_wp_head' );
@@ -40,7 +40,5 @@ if ( ! function_exists( 'iworks_action_wp_head' ) ) {
 			$follow ? 'follow' : 'nofollow',
 			$index ? 'index' : 'noindex'
 		);
-
 	}
 }
-

@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Clean admin bar logo links
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Remove links from admin bar an add link rto "przełam sieć"
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
 */
 
 add_action( 'wp_before_admin_bar_render', 'iworks_admin_bar' );

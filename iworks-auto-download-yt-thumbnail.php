@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: Auto download and set thumbnail for youtube content
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Plugin force to use movie post format for posts with YT movie and try to download YT thumbnailn.
 Version: 1.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 /*
@@ -131,9 +131,9 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 			}
 			//make sure the function exists
 			if ( ! function_exists( 'media_handle_upload' ) ) {
-				require_once( ABSPATH . 'wp-admin' . '/includes/image.php' );
-				require_once( ABSPATH . 'wp-admin' . '/includes/file.php' );
-				require_once( ABSPATH . 'wp-admin' . '/includes/media.php' );
+				require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+				require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+				require_once ABSPATH . 'wp-admin' . '/includes/media.php';
 			}
 			$tmp = download_url( $url );
 			if ( is_wp_error( $tmp ) ) {
@@ -159,4 +159,3 @@ if ( ! class_exists( 'iworks_auto_download_yt_thumbnail' ) ) {
 }
 
 new iworks_auto_download_yt_thumbnail();
-

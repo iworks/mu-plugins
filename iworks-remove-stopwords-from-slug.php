@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: Remove Stopwords From Slug (PL)
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Removes Polish stopwords from post slugs.
 Version: 1.0.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
  */
-/*	Copyright 2008  Alberto Varela  (email : alberto@berriart.com)
+/*  Copyright 2008  Alberto Varela  (email : alberto@berriart.com)
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -394,4 +394,4 @@ class Iworks_Remove_Stopwords_From_Slug_PL {
 	}
 }
 
-new Iworks_Remove_Stopwords_From_Slug_PL;
+new Iworks_Remove_Stopwords_From_Slug_PL();

@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: iWorks add more allowed html tags
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Add some html tags to $global $allowedposttags
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
 */
 
 
@@ -21,4 +21,3 @@ if ( ! function_exists( 'iworks_add_allowed_tags' ) ) {
 		$allowedposttags['pre']['escaped'] = array();
 	}
 }
-

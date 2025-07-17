@@ -1,4 +1,16 @@
 <?php
+/*
+Plugin Name: d
+Plugin URI: https://github.com/iworks/mu-plugins
+Description: D functionality.
+Version: 1.0.0
+Author: Marcin Pietrzak
+Author URI: http://iworks.pl/
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
+*/
+
+
 
 add_filter( 'auto_update_plugin', '__return_false' );
 add_filter( 'auto_update_theme', '__return_false' );

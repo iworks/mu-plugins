@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: WPMU Plugin Stats
-Plugin URI: http://wordpress.org/extend/plugins/wpmu-plugin-stats/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: WordPress plugin for letting site admins easily see what plugins are actively used on which sites
 Version: 1.4
 Author: Kevin Graeme, <a href="http://deannaschneider.wordpress.com/" target="_target">Deanna Schneider</a> & <a href="http://www.jasonlemahieu.com/" target="_target">Jason Lemahieu</a>
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: cets-plugin-stats
 Domain Path: /languages
 
@@ -122,7 +122,6 @@ if ( ! class_exists( 'cets_Plugin_Stats' ) ) {
 			//}
 
 			update_site_option( 'cets_plugin_stats_data_freshness', time() );
-
 		}
 
 		// Create a function to add a menu item for site admins
@@ -152,7 +151,8 @@ if ( ! class_exists( 'cets_Plugin_Stats' ) ) {
 			);
 		}
 
-		function about_tab() { ?>
+		function about_tab() {
+			?>
 			<style>.tab-about li { list-style: none; }</style>
 			<h1>WPMU Plugin Stats</h1>
 			<p>
@@ -456,7 +456,6 @@ if ( ! class_exists( 'cets_Plugin_Stats' ) ) {
 
 			return $links;
 		}
-
 	} // END class cets_Plugin_Stats
 
 	$GLOBALS['cets_Plugin_Stats'] = new cets_Plugin_Stats();

@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Allow load archive files, csv too
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Add zip and gzip files to allowed.
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
  */
 
 
@@ -19,4 +19,3 @@ function iworks_custom_upload_mimes( $existing_mimes = array() ) {
 	$existing_mimes['csv']  = 'text/csv';
 	return $existing_mimes;
 }
-

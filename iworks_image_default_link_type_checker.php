@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: iWorks default link file
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Setup global image_default_link_type to file.
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
 */
 
 add_action( 'admin_init', 'iworks_image_default_link_type_checker' );

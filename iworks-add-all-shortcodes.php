@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: iWorks add shortcodes
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: add all existing shortcodes to editor
 Version: 0.1
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 class iWorks_add_all_shortcodes {
@@ -46,8 +46,6 @@ class iWorks_add_all_shortcodes {
 		echo '});';
 		echo '</script>';
 	}
-
 }
 
 iWorks_add_all_shortcodes::init();
-

@@ -1,4 +1,16 @@
 <?php
+/*
+Plugin Name: drafts-on-dashbord
+Plugin URI: https://github.com/iworks/mu-plugins
+Description: Drafts on dashbord functionality.
+Version: 1.0.0
+Author: Marcin Pietrzak
+Author URI: http://iworks.pl/
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
+*/
+
+
 class iWorks_Drafts_On_Dashboard {
 
 	private $domain = 'iworks_drafts';
@@ -7,7 +19,7 @@ class iWorks_Drafts_On_Dashboard {
 		add_action( 'wp_dashboard_setup', array( &$this, 'wp_dashboard_setup' ) );
 	}
 
-	static public function start() {
+	public static function start() {
 		new iWorks_Drafts_On_Dashboard();
 	}
 
@@ -37,8 +49,6 @@ class iWorks_Drafts_On_Dashboard {
 		}
 		wp_reset_postdata();
 	}
-
 }
 
 iWorks_Drafts_On_Dashboard::start();
-

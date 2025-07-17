@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: iWorks Random Post Slug
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Create random post slug.
 Version: 1.0.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
 
@@ -31,8 +31,6 @@ class iWorks_Random_Post_Slug {
 		);
 		wp_update_post( $postarr );
 	}
-
 }
 
-new iWorks_Random_Post_Slug;
-
+new iWorks_Random_Post_Slug();

@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: iWorks contact shortcode
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: add kontakt data
 Version: 0.1
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 class iWorks_contact_shortcode {
@@ -31,8 +31,6 @@ class iWorks_contact_shortcode {
 		$content .= '</ul>';
 		return $content;
 	}
-
 }
 
 new iWorks_contact_shortcode();
-

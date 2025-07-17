@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: iWorks wp-login.php renamer
-Plugin URI: http://upprev.com/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: raname wp-login.php o other name
 Version: 1.0.1
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 
@@ -75,8 +75,6 @@ class iWorks_WP_Login_Redirect {
 		}
 		return $url;
 	}
-
 }
 
 new iWorks_WP_Login_Redirect();
-

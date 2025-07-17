@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Show post publication time
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Show post time for futured publication.
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
 */
 
 add_filter( 'post_date_column_time', 'iworks_show_post_time' );
@@ -17,4 +17,3 @@ function iworks_show_post_time( $time, $post = '', $column_name = '', $mode = ''
 	}
 	return $time;
 }
-

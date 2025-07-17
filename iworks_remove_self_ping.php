@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Preseve self-pingback
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Stop sending self pinbacks
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
 */
 
 add_action( 'pre_ping', 'iworks_action_pre_ping_remove_selfpings' );
@@ -21,4 +21,3 @@ if ( ! function_exists( 'iworks_action_pre_ping_remove_selfpings' ) ) {
 		}
 	}
 }
-

@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: iWorks Aggresive Lazy Load
-Plugin URI: http://iworks.pl/szybki-wordpress-obrazki-leniwe-ladowanie
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Added ability to agresive lazy load to improve page UX and speed.
 Version: 1.0.4
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 
 = CHANGELOG =

@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Cloud Tag Limiter
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Limit tag number in default tag cloud widge
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
  */
 
 class iworks_cloud_tag_limiter {
@@ -56,7 +56,6 @@ class iworks_cloud_tag_limiter {
 	private function get_value() {
 		return get_option( $this->option_name, 45 );
 	}
-
 }
 
 iworks_cloud_tag_limiter::init();

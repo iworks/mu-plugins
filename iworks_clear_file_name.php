@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Sanitize Attachment File Name
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Sanitize attachment file name, removing non latin1 letters
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
 */
 
 add_action( 'sanitize_file_name', 'iworks_sanitize_file_name' );
@@ -24,4 +24,3 @@ if ( ! function_exists( 'iworks_sanitize_file_name' ) ) {
 		return $filename;
 	}
 }
-

@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Change admin post/page color by status
-Plugin URI: http://wpsnipp.com/index.php/functions-php/change-admin-postpage-color-by-status-draft-pending-published-future-private/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Adding this snippet to the functions.php of your WordPress theme will change the background colors of the post / page within the admin based on the current status. Draft, Pending, Published, Future, Private.
 Version: trunk
 Author: Kevin Chard
 Author URI: http://wpsnipp.com/index.php/author/kevin/
-License: GNU GPL
+License: GPLv3 or later
 */
 
 

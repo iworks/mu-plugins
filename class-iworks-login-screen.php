@@ -1,4 +1,14 @@
 <?php
+/*
+Plugin Name: iWorks Login Screen
+Plugin URI: https://github.com/iworks/mu-plugins
+Description: Instantly update your WordPress login screen with a new, professionally designed look—no customization required.
+Version: 1.0.1
+Author: Marcin Pietrzak
+Author URI: http://iworks.pl/
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
+*/
 
 
 class iWorks_Login_Screen {
@@ -63,6 +73,7 @@ class iWorks_Login_Screen {
 		);
 		$wp_query = new WP_Query( $args );
 		if ( empty( $wp_query->posts ) ) {
+			return WPMU_PLUGIN_URL . '/Gemini_Generated_Image_dsrjchdsrjchdsrj.jpg';
 			return false;
 		}
 		return wp_get_attachment_image_url( $wp_query->posts[0], 'full' );
@@ -154,4 +165,4 @@ body {
 	}
 }
 
-new iWorks_Login_Screen;
+new iWorks_Login_Screen();

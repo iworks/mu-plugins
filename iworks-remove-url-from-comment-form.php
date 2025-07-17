@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: Remove URL field from comment form
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Plugin remove url field from WordPress comment form.
 Version: 1.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 /*
@@ -35,4 +35,3 @@ function iworks_remove_url_from_comment_form( $fields ) {
 	return $fields;
 }
 add_filter( 'comment_form_default_fields', 'iworks_remove_url_from_comment_form' );
-

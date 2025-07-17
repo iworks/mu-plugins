@@ -2,12 +2,12 @@
 
 /*
 Plugin Name: iWorks Simple facebook Open Graph
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Add featured image as facebook image
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
 */
 
 if ( ! class_exists( 'iWorks_Simple_Facebook_Open_Graph' ) ) {
@@ -128,4 +128,3 @@ if ( ! class_exists( 'iWorks_Simple_Facebook_Open_Graph' ) ) {
 	}
 	new iWorks_Simple_Facebook_Open_Graph();
 }
-

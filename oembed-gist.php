@@ -3,8 +3,8 @@
 Plugin Name: oembed gist
 Description: Add gist url to omebeds.
 Author: Marcin Pietrzak
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 class iworks_oembed_gist {
 
@@ -27,4 +27,4 @@ class iworks_oembed_gist {
 		);
 	}
 }
-new iworks_oembed_gist;
+new iworks_oembed_gist();

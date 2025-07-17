@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Delete older revisions
-Plugin URI: http://iworks.pl/
+Plugin URI: https://github.com/iworks/mu-plugins
 Description: Delete older than month revisions
 Version: trunk
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GNU GPL
+License: GPLv3 or later
 */
 
 if ( ! function_exists( 'iworks_delete_older_revisions' ) ) {
@@ -25,4 +25,3 @@ if ( ! function_exists( 'iworks_delete_older_revisions' ) ) {
 		$wpdb->query( $query );
 	}
 }
-

@@ -2,8 +2,8 @@
 
 /*
  * Plugin Name:       Turn Off Comments
- * License:           GPL v3 or later
- * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
+ * License: GPLv3 or later
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
 add_action( 'pre_comment_on_post', '__return_false', PHP_INT_MAX );
